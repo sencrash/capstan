@@ -11,10 +11,6 @@ package qemu
 import (
 	"bufio"
 	"fmt"
-	"github.com/cloudius-systems/capstan/hypervisor"
-	"github.com/cloudius-systems/capstan/nat"
-	"github.com/cloudius-systems/capstan/util"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net"
 	"os"
@@ -24,6 +20,11 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/cloudius-systems/capstan/hypervisor"
+	"github.com/cloudius-systems/capstan/nat"
+	"github.com/cloudius-systems/capstan/util"
+	"gopkg.in/yaml.v2"
 )
 
 type VMConfig struct {
@@ -304,7 +305,7 @@ func (c *VMConfig) vmArguments(version *Version) ([]string, error) {
 		args = append(args, "-device", "virtio-blk-pci,id=blk0,bootindex=0,drive=hd0")
 	}
 	args = append(args, "-drive", "file="+c.Image+",if=none,id=hd0,aio="+c.AioType+",cache="+c.vmDriveCache())
-	if version.Major >= 1 && version.Minor >= 3 {
+	if version.Major == 1 && version.Minor >= 3 || version.Major > 1 {
 		args = append(args, "-device", "virtio-rng-pci")
 	}
 	args = append(args, "-chardev", "stdio,mux=on,id=stdio,signal=off")
